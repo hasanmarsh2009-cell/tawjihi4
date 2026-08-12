@@ -40,12 +40,13 @@
                 const data = await response.json();
                 
                 if (data.length > 0) {
-                    const student = data[0];
-                    resultDiv.innerHTML = `
-                        <h3>👤 ${student.name}</h3>
-                        <p>📚 الفرع: ${student.branch || 'غير محدد'}</p>
-                        <p>⭐ المعدل: ${student.average || 'غير متاح'}</p>
-                        <p>🏆 الترتيب: ${student.overall_rank || 'غير متاح'}</p>
+            const student = data[0];
+resultDiv.innerHTML = `
+    <h3>👤 ${student.اسم}</h3>
+    <p>📚 الفرع: ${student.فرع || 'غير محدد'}</p>
+    <p>⭐ المعدل: ${student.متوسط || 'غير متاح'}</p>
+    <p>🏆 الترتيب: ${student.الترتيب_العام || 'غير متاح'}</p>
+`;         || 'غير متاح'}</p>
                     `;
                 } else {
                     resultDiv.innerHTML = '❌ رقم الجلوس غير موجود';
