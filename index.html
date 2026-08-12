@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نتائج التوجيهي</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>📊 نتيجة التوجيهي</h1>
+        <input type="text" id="searchInput" placeholder="أدخل رقم الجلوس">
+        <button onclick="searchStudent()">🔍 بحث</button>
+        <div id="result"></div>
+    </div>
+    <script>
+        // معلومات الاتصال بقاعدة البيانات
+        const supabaseUrl = 'https://bcoosbeidinimlicdqru.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJjb29zYmVpZGluaW1saWNkcXJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTU0NDY0MDAsImV4cCI6MjAzMTAyMjQwMH0.TdQwV2lP3qZ4rF7sH9jK1lM5nB8vC6xY0zW3eR7tU2';
+
+        async function searchStudent() {
+            const seatNumber = document.getElementById('searchInput').value.trim();
+            const resultDiv = document.getElementById('result');
+            
+            if (!seatNumber) {
+                resultDiv.innerHTML = '⚠️ الرجاء إدخال رقم الجلوس';
+                return;
+            }
+            
+            resultDiv.innerHTML = '⏳ جاري البحث...';
+            
+            try {
+                const response = await fetch(`${supabaseUrl}/rest/v1/students?seat_number=eq.${seatNumber}&select=*`, {
+                    headers: {
+                        'apikey': supabaseKey,
+                        'Authorization': `Bearer ${supabaseKey}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.length > 0) {
+                    const student = data[0];
+                    resultDiv.innerHTML = `
+                        <h3>👤 ${student.name}</h3>
+                        <p>📚 الفرع: ${student.branch || 'غير محدد'}</p>
+                        <p>⭐ المعدل: ${student.average || 'غير متاح'}</p>
+                        <p>🏆 الترتيب: ${student.overall_rank || 'غير متاح'}</p>
+                    `;
+                } else {
+                    resultDiv.innerHTML = '❌ رقم الجلوس غير موجود';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = '⚠️ خطأ في الاتصال، حاول مرة أخرى';
+                console.error(error);
+            }
+        }
+    </script>
+</body>
+</html>
